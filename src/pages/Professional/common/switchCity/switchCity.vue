@@ -90,7 +90,6 @@
 import { ref, reactive, onMounted } from "vue";
 import { COMMON_MESSAGE } from "./constants.js";
 import { AutoPredictor } from "../../../../utils/autoPredictor.js";
-import sendPostRequest from "../../../../utils/sendPostRequest";
 import utils from "../../../../utils/toolsFnAndGetPosition.js";
 import store from "../../../../store/index.js";
 import { SET_HOT_LIST } from "../../../../config/configData.js";

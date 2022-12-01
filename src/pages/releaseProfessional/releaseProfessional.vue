@@ -27,6 +27,7 @@
         >
         <view class="inp">
           <uni-easyinput
+            :inputBorder="false"
             v-model="company"
             :placeholder="
               tabStatus === 1 ? '请输入公司名称' : '快递公司/美团/抖音'
@@ -42,6 +43,7 @@
         <view class="label">岗位<span class="required_label">*</span></view>
         <view class="inp">
           <uni-easyinput
+            :inputBorder="false"
             v-model="job"
             :placeholder="
               tabStatus === 1 ? '输入岗位名称' : '外卖/快递/直播/网约车'
@@ -66,6 +68,7 @@
         <view class="label">薪资描述<span class="required_label">*</span></view>
         <view class="inp">
           <uni-easyinput
+            :inputBorder="false"
             v-model="salary"
             placeholder="如:28W或者14*13"
             :styles="styles"
@@ -546,9 +549,6 @@ export default {
       margin-bottom: 30rpx;
       margin-top: 30rpx;
       padding: 20rpx;
-
-      .inp {
-      }
     }
 
     .info_item_class2 {

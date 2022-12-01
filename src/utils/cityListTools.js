@@ -36,12 +36,10 @@ const finalUsedCityList = () => {
 	if (version && allCityList) {
 		if (version === VERSION) {
 			return uni.getStorageSync('allCityList');
-			console.log("gg".cityList)
 		} else {
 			let cityList;
 			getCityList().then(res => {
 				cityList = res.data;
-				console.log("gg",cityList)
 			})
 			uni.clearStorageSync();
 			uni.setStorageSync('allCityList', cityList);

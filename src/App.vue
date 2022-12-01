@@ -1,7 +1,8 @@
 <script>
+import {finalUsedCityList} from "../src/utils/cityListTools"
 export default {
   onLaunch: function () {
-    console.log('App Launch')
+    finalUsedCityList()
   },
   onShow: function () {
     console.log('App Show')

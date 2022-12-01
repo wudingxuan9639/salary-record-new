@@ -1,5 +1,5 @@
 //全局配置变量为self时使用MOCK数据，反之为接口数据（'prod'）
-export const ENV = 'sel'
+export const ENV = 'prod'
 
 export const ORDINARY = {
     "code": 200,

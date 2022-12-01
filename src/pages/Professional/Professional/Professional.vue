@@ -218,7 +218,7 @@ export default {
     const search = (value) => {
       uni.navigateTo({
         url:
-          "../searchDetail/Ordinary/ordinary" +
+          "../searchDetail/ordinary.vue" +
           "?inputValue=" +
           value +
           "&target=" +

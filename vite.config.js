@@ -7,6 +7,9 @@ export default defineConfig({
   ],
   server: {
 		port: 8084,
+		hmr:{
+			overlay:false
+		},
 		proxy: {
 			'/api': {
 				target: 'https//:chaxinjujuan.com', // 目标服务  

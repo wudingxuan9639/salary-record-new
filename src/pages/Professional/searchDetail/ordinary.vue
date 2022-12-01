@@ -165,7 +165,7 @@ export default {
   },
   props: {
     inputValue: String,
-    target: Number,
+    target: String,
     typeId: String
   },
   setup(props) {
