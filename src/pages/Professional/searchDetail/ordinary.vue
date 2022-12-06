@@ -21,6 +21,7 @@
 
     <view class="content_search">
       <uni-easyinput
+        :inputBorder="false"
         v-model="sendInformation.information"
         placeholder="请输入公司名称/城市/岗位"
         @iconClick="search()"
@@ -75,14 +76,16 @@
               class="input"
               v-model="sendInformation.dSalary"
               placeholder="最低工资"
-            ></uni-easyinput>
+            >
+            </uni-easyinput>
             <view class="middle_dashed_line"></view>
             <uni-easyinput
               type="number"
               class="input"
               v-model="sendInformation.hSalary"
               placeholder="最高工资"
-            ></uni-easyinput>
+            >
+            </uni-easyinput>
           </view>
         </view>
       </view>
@@ -161,12 +164,12 @@ import { ORDINARY, ENV } from "../../../config/MAKRDATA.js";
 
 export default {
   components: {
-    searchItem
+    searchItem,
   },
   props: {
     inputValue: String,
     target: String,
-    typeId: String
+    typeId: String,
   },
   setup(props) {
     onMounted(() => {
@@ -343,7 +346,7 @@ export default {
                   content: "未找到数据，请重试！",
                   showCancel: false,
                 });
-                console.log(11111111)
+                console.log(11111111);
               }
             },
             fail() {
@@ -458,7 +461,7 @@ export default {
     }
 
     .headerTabLine {
-      border-bottom: 4rpx solid #fff;
+      border-bottom: 7rpx solid #fff;
       border-radius: 5%;
     }
   }

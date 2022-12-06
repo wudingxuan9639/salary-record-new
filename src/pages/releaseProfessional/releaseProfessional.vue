@@ -534,12 +534,14 @@ export default {
 
       .item_button {
         flex-shrink: 0;
-        width: 100rpx;
+        width: 122rpx;
+        height: 62rpx;
         text-align: center;
-        padding: 10rpx;
-        border: 1rpx solid #5e95ee;
-        color: #5e95ee;
-        border-radius: 20rpx;
+        line-height: 60rpx;
+        font-size: 28rpx;
+        color: #d1d5da;
+        border: 2rpx solid #d1d5da;
+        border-radius: 12rpx;
         margin-top: 10rpx;
         margin-left: 20rpx;
       }

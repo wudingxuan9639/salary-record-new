@@ -289,7 +289,7 @@ export default {
     }
 
     .headerTabLine {
-      border-bottom: 4rpx solid #fff;
+      border-bottom: 7rpx solid #fff;
       border-radius: 5%;
     }
   }
