@@ -19,7 +19,7 @@
       >
     </view>
 
-    <searchBox :tabStatus="tabStatus.statusCode"></searchBox>
+    <searchBox> </searchBox>
 
     <view class="hot_box" v-if="tabStatus.statusCode === 'emerging'">
       <view class="hot_box_profession">
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { ref, reactive, toRaw, onMounted } from "vue";
+import { ref, reactive, toRaw, onMounted, provide } from "vue";
 import { HOT_ORDINARY, HOT_EMERGING } from "../../../config/configData.js";
 import sendPostRequest from "../../../utils/sendPostRequest.js";
 import router from "../../../utils/route.js";
@@ -87,7 +87,7 @@ import { ENV } from "../../../config/MAKRDATA.js";
 
 export default {
   components: {
-    searchBox,
+    searchBox
   },
   props: {
     target: String,
@@ -109,6 +109,9 @@ export default {
     const tabStatus = reactive({
       statusCode: props.target,
     });
+
+    //搜索框组件provide
+    provide("tabStatus",tabStatus);
 
     const changeTab = (target) => {
       tabStatus.statusCode = target;

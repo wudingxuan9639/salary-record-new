@@ -15,7 +15,10 @@
             <view class="info">普通职业打工人</view>
           </view>
           <view class="item_line"></view>
-          <view @click="enterProfessional" class="item_emerging">
+          <view
+            @click="enterProfessional(statusCode.Emerging)"
+            class="item_emerging"
+          >
             <image
               class="image"
               src="../../static/img/index/emerging.svg"

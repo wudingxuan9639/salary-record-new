@@ -1,35 +1,25 @@
 <template>
   <view class="content_search">
     <view class="content_search_box">
-      <uni-easyinput
-        v-if="statusCode.statusCodeCtx === 'normal'"
+      <input
+        v-if="statusCode.statusCode === 'normal'"
         class="content_search_input"
         v-model="normalValue"
         :inputBorder="false"
-        :placeholder="
-          statusCode.statusCodeCtx === 'normal'
-            ? '请输入公司名称/城市/岗位'
-            : '请输入职业/城市'
-        "
-      >
-      </uni-easyinput>
-      <uni-easyinput
-        v-if="statusCode.statusCodeCtx === 'emerging'"
+        placeholder="请输入职业/城市/岗位"
+      />
+      <input
+        v-if="statusCode.statusCode === 'emerging'"
         class="content_search_input"
         v-model="emergingValue"
         :inputBorder="false"
-        :placeholder="
-          statusCode.statusCodeCtx === 'normal'
-            ? '请输入公司名称/城市/岗位'
-            : '请输入职业/城市'
-        "
-      >
-      </uni-easyinput>
+        placeholder="请输入职业/城市"
+      />
       <view
         class="content_search_button"
         @click="
           search(
-            statusCode.statusCodeCtx === 'normal' ? normalValue : emergingValue
+            statusCode.statusCode === 'normal' ? normalValue : emergingValue
           )
         "
       >
@@ -37,25 +27,20 @@
           class="content_search_img"
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADfSURBVHgB1ZPhDYMgEIUvnYARHMER2KTdoN2gbqAb4AjtJHYDugEj0IPcxQuhgI1p4ksu/rjH53E+Af4h773GGrGsX7VgGaxuC0gRqKbgUS2whQ44rCFMKvo91pxMrEpAnsyWrhV6fl3FWDKxvsISvyO/zhkMNQ00ilYSNOWavLu+kcdJiCvKNaNgo3LnTrCzGPimN+rWg2I9rxzwSU8N7brmgPw2LQLdQX26eszC5/8h2A8oGOWvFzMpY0S3uItAs8416OTrCp6hCSquNScTWwJp4WOog72EsAvWDQ6jD0InxqabjzR3AAAAAElFTkSuQmCC"
         ></image>
-        <view class="content_search_button_text">搜索</view>
+        <view class="content_search_button_text"
+          >搜索</view
+        >
       </view>
     </view>
   </view>
 </template>
 
 <script>
-import { reactive, ref } from "vue";
+import { ref, inject } from "vue";
 export default {
-  props: {
-    tabStatus: String,
-  },
-  setup(props) {
+  setup() {
     //状态码
-    const statusCode = reactive({
-      statusCodeCtx: props.tabStatus,
-    });
-    // console.log("code",statusCode.statusCodeCtx)
-    console.log("props", props, props.tabStatus);
+    const statusCode = inject("tabStatus");
     // 搜索框输入值
     const normalValue = ref("");
     const emergingValue = ref("");
@@ -67,7 +52,7 @@ export default {
           "?inputValue=" +
           value +
           "&target=" +
-          statusCode.statusCodeCtx,
+          statusCode.statusCode,
       });
     };
     return {
@@ -100,7 +85,7 @@ export default {
       padding-left: 30rpx;
       width: 500rpx;
       font-size: 28rpx;
-      padding-top: 15rpx;
+      padding-top: 10rpx;
     }
   }
 

@@ -1,24 +1,44 @@
 {
-    "projectType":"配置项目类型，目前支持类型 react|vue|",
-    "projectName":"salary-record",
-    "miniprogramRoot": "./dist/dev/mp-weixin",
-    "pages":[
-        {
-            "name":"index",
-            "html":"./public/index.html",
-            "entry":"./src/index.js"
-        }
-    ],
-    "development":{
-        "openPage":"index.html",
-        "host":"0.0.0.0",
-        "port":"5000",
-        "proxy":{
-        },
-        "historyApiFallback":{
-        }
-    },
-    "dependencies":{
-        "lib1":"粘贴原项目package.json里dependencies内容"
+  "projectType": "配置项目类型，目前支持类型 react|vue|",
+  "projectName": "salary-record",
+  "miniprogramRoot": "dist/dev/mp-weixin/",
+  "setting": {
+    "ignoreDevUnusedFiles": false,
+    "ignoreUploadUnusedFiles": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
     }
+  },
+  "pages": [
+    {
+      "name": "index",
+      "html": "./public/index.html",
+      "entry": "./src/index.js"
+    }
+  ],
+  "development": {
+    "openPage": "index.html",
+    "host": "0.0.0.0",
+    "port": "5000",
+    "proxy": {},
+    "historyApiFallback": {}
+  },
+  "dependencies": {
+    "lib1": "粘贴原项目package.json里dependencies内容"
+  },
+  "appid": "wxc3dcf4f298e3e6ca",
+  "compileType": "miniprogram",
+  "libVersion": "2.28.0",
+  "srcMiniprogramRoot": "dist/dev/mp-weixin/",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "condition": {},
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  }
 }

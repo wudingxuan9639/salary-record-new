@@ -203,7 +203,6 @@ export default {
       dSalary: null,
       hSalary: null,
     });
-
     //薪资
     const chooseSalary = (salaryId) => {
       switch (salaryId) {
