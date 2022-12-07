@@ -160,14 +160,15 @@ import router from "../../../utils/route.js";
 // import { getPopCityList } from "../../../utils/cityListTools.js";
 
 //测试导入
-import { ORDINARY, ENV } from "../../../config/MAKRDATA.js";
+import { ORDINARY, EMERGING,ENV } from "../../../config/MAKRDATA.js";
 
 export default {
   components: {
     searchItem,
   },
   props: {
-    inputValue: String,
+    normalValue: String,
+    emergingValue:String,
     target: String,
     typeId: String,
   },
@@ -198,7 +199,7 @@ export default {
     //发送信息对象
     console.log("inputAccie", props.inputValue);
     const sendInformation = reactive({
-      information: props.inputValue,
+      information: tabStatus.value === "normal" ? props.normalValue : props.emergingValue,
       cityIds: [],
       typeIds: [],
       professionIds: [],
@@ -346,7 +347,6 @@ export default {
                   content: "未找到数据，请重试！",
                   showCancel: false,
                 });
-                console.log(11111111);
               }
             },
             fail() {
@@ -360,12 +360,16 @@ export default {
         );
       } else {
         uni.hideLoading();
-        operateData(ORDINARY.data.data);
+         operateData(tabStatus.value === "normal" ? ORDINARY.data.data : EMERGING.data.data);
+         console.log("🚀 ~ file: ordinary.vue:364 ~ search ~ tabStatus.value", tabStatus.value)
       }
     }
 
     function operateData(info) {
+      console.log("🚀 ~ file: ordinary.vue:369 ~ operateData ~ info", info)
       detail.data = [];
+      console.log("🚀 ~ file: ordinary.vue:370 ~ operateData ~ detail.data", detail.data)
+      
       Array.isArray(info) &&
         info.forEach((item) => {
           detail.data.push(item);

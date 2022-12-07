@@ -27,9 +27,7 @@
           class="content_search_img"
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADfSURBVHgB1ZPhDYMgEIUvnYARHMER2KTdoN2gbqAb4AjtJHYDugEj0IPcxQuhgI1p4ksu/rjH53E+Af4h773GGrGsX7VgGaxuC0gRqKbgUS2whQ44rCFMKvo91pxMrEpAnsyWrhV6fl3FWDKxvsISvyO/zhkMNQ00ilYSNOWavLu+kcdJiCvKNaNgo3LnTrCzGPimN+rWg2I9rxzwSU8N7brmgPw2LQLdQX26eszC5/8h2A8oGOWvFzMpY0S3uItAs8416OTrCp6hCSquNScTWwJp4WOog72EsAvWDQ6jD0InxqabjzR3AAAAAElFTkSuQmCC"
         ></image>
-        <view class="content_search_button_text"
-          >搜索</view
-        >
+        <view class="content_search_button_text">搜索</view>
       </view>
     </view>
   </view>
@@ -46,14 +44,25 @@ export default {
     const emergingValue = ref("");
     //搜索操作
     const search = (value) => {
-      uni.navigateTo({
-        url:
-          "../searchDetail/ordinary" +
-          "?inputValue=" +
-          value +
-          "&target=" +
-          statusCode.statusCode,
-      });
+      if (statusCode.statusCode === "normal") {
+        uni.navigateTo({
+          url:
+            "../searchDetail/ordinary" +
+            "?normalValue=" +
+            value +
+            "&target=" +
+            statusCode.statusCode,
+        });
+      } else {
+        uni.navigateTo({
+          url:
+            "../searchDetail/ordinary" +
+            "?emergingValue=" +
+            value +
+            "&target=" +
+            statusCode.statusCode,
+        });
+      }
     };
     return {
       search,
