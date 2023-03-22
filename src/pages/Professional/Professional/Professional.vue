@@ -8,71 +8,75 @@
       <view
         class="headerTab"
         :class="{ headerTabLine: tabStatus.statusCode === 'normal' }"
-        @click="changeTab(state.Normal)"
+        @click="changeTab('normal')"
         >普通职业</view
       >
       <view
         class="headerTab"
         :class="{ headerTabLine: tabStatus.statusCode === 'emerging' }"
-        @click="changeTab(state.Emerging)"
+        @click="changeTab('emerging')"
         >灵活职业</view
       >
     </view>
 
-    <searchBox> </searchBox>
+    <searchBox :tabStatus = "tabStatus" @update="operateState" @searchVal = "search"> </searchBox>
 
-    <view class="hot_box" v-if="tabStatus.statusCode === 'emerging'">
-      <view class="hot_box_profession">
-        <view class="hot_title_1">热门职业</view>
-        <view class="under_line"></view>
-        <view class="text_area">
+    <view v-if="!pageSearched">
+      <view class="hot_box" v-if="tabStatus.statusCode === 'emerging'">
+        <view class="hot_box_profession">
+          <view class="hot_title_1">热门职业</view>
+          <view class="under_line"></view>
+          <view class="text_area">
+            <view
+              class="hot_item_red"
+              :class="{ hot_item_blue: changeNum > 3 }"
+              v-for="item in emergingList.data"
+              :key="item.id"
+              @click="selectHotOptions(item.id)"
+              >{{ item.professionName }}</view
+            >
+          </view>
+        </view>
+        <view class="hot_box_city">
+          <view class="hot_title_2">热门区域</view>
+          <view class="under_line"></view>
+          <view class="text_area">
+            <view
+              class="hot_item_red"
+              :class="{ hot_item_blue: changeNumOfCity > 3 }"
+              v-for="item in hotAreaList.data"
+              :key="item.id"
+              @click="selectHotCity(item.id)"
+              >{{ item.cityName }}</view
+            >
+          </view>
+        </view>
+      </view>
+
+      <view class="content_more" v-if="tabStatus.statusCode === 'normal'">
+        <view class="more_title">
+          <view class="more_label">热门搜索</view>
+          <view class="under_line"></view>
+        </view>
+        <view class="more_list">
           <view
-            class="hot_item_red"
-            :class="{ hot_item_blue: changeNum > 3 }"
-            v-for="item in emergingList.data"
+            class="more_list_item"
+            v-for="item in ordinaryList.data"
             :key="item.id"
             @click="selectHotOptions(item.id)"
-            >{{ item.professionName }}</view
           >
-        </view>
-      </view>
-      <view class="hot_box_city">
-        <view class="hot_title_2">热门区域</view>
-        <view class="under_line"></view>
-        <view class="text_area">
-          <view
-            class="hot_item_red"
-            :class="{ hot_item_blue: changeNumOfCity > 3 }"
-            v-for="item in hotAreaList.data"
-            :key="item.id"
-            @click="selectHotCity(item.id)"
-            >{{ item.cityName }}</view
-          >
+            {{ item.name }}
+          </view>
         </view>
       </view>
     </view>
 
-    <view class="content_more" v-if="tabStatus.statusCode === 'normal'">
-      <view class="more_title">
-        <view class="more_label">热门搜索</view>
-        <view class="under_line"></view>
-      </view>
-      <view class="more_list">
-        <view
-          class="more_list_item"
-          v-for="item in ordinaryList.data"
-          :key="item.id"
-          @click="selectHotOptions(item.id)"
-        >
-          {{ item.name }}
-        </view>
-      </view>
-    </view>
+     <searchCtx v-if="pageSearched" :searchCtx = "searchCtx" :targetSch = "tabStatus.statusCode"></searchCtx>
   </view>
 </template>
 
 <script>
-import { ref, reactive, toRaw, onMounted, provide } from "vue";
+import { ref, reactive, toRaw, onMounted, provide,inject,toRef } from "vue";
 import { HOT_ORDINARY, HOT_EMERGING } from "../../../config/configData.js";
 import sendPostRequest from "../../../utils/sendPostRequest.js";
 import router from "../../../utils/route.js";
@@ -81,21 +85,30 @@ import {
   HOT_PROFESSION,
 } from "../../../config/professionalMockData.js";
 import searchBox from "../common/searchBox.vue";
+import searchCtx from "../common/searchCtx/searchCtx.vue"
 
 //环境控制变量导入
 import { ENV } from "../../../config/MAKRDATA.js";
 
 export default {
   components: {
-    searchBox
+    searchBox,
+    searchCtx
   },
   props: {
     target: String,
+    targetRtn:String
   },
   setup(props) {
+    //页面状态
+    let pageSearched = ref(false);
+    const operateState = () => {
+      pageSearched.value = true;
+    };
+
     onMounted(() => {
       getHotData();
-      changeTab(props.target);
+      changeTab(props.target || props.targetRtn);
     });
     //样式切换变量
     let changeNum = ref(0);
@@ -106,15 +119,16 @@ export default {
       Emerging: "emerging",
     });
 
+    //状态变量
     const tabStatus = reactive({
       statusCode: props.target,
     });
-
+   
     //搜索框组件provide
-    provide("tabStatus",tabStatus);
-
-    const changeTab = (target) => {
-      tabStatus.statusCode = target;
+    provide("tabStatus", tabStatus);
+    //灵活普通状态切换
+    const changeTab = (value) => {
+      tabStatus.statusCode = value;
       loadingList();
     };
 
@@ -217,19 +231,22 @@ export default {
           : toRaw(emergingList.data);
     }
 
-    //搜索操作
+    //搜索操作-保存数据
+    let searchCtx = ref("出去")
     const search = (value) => {
-      uni.navigateTo({
-        url:
-          "../searchDetail/ordinary.vue" +
-          "?inputValue=" +
-          value +
-          "&target=" +
-          tabStatus.statusCode,
-      });
+      provide("searchCon",value)
+      console.log("ffff",value)
+      // let searchCtx = value
+      // return searchCtx;
+      searchCtx.value = value;
+      console.log("searchCtx",searchCtx.value)
     };
+    
 
     return {
+      searchCtx,
+      operateState,
+      pageSearched,
       selectHotCity,
       hotAreaList,
       changeNum,
@@ -244,7 +261,7 @@ export default {
       changeTab,
       state,
     };
-  },
+  }
 };
 </script>
 

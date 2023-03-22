@@ -18,7 +18,7 @@
       <view
         class="content_search_button"
         @click="
-          search(
+          searchR(
             statusCode.statusCode === 'normal' ? normalValue : emergingValue
           )
         "
@@ -34,38 +34,33 @@
 </template>
 
 <script>
-import { ref, inject } from "vue";
+import { ref,provide, toRef} from "vue";
+import emitter from "../../../utils/emitter.js";
 export default {
-  setup() {
-    //状态码
-    const statusCode = inject("tabStatus");
+  props: ["tabStatus"],
+  setup(props, ctx) {
+    //状态码，将 `props` 的单个属性转为一个 ref
+    const statusCode = toRef(props, 'tabStatus')
     // 搜索框输入值
     const normalValue = ref("");
     const emergingValue = ref("");
     //搜索操作
-    const search = (value) => {
-      if (statusCode.statusCode === "normal") {
-        uni.navigateTo({
-          url:
-            "../searchDetail/ordinary" +
-            "?normalValue=" +
-            value +
-            "&target=" +
-            statusCode.statusCode,
-        });
-      } else {
-        uni.navigateTo({
-          url:
-            "../searchDetail/ordinary" +
-            "?emergingValue=" +
-            value +
-            "&target=" +
-            statusCode.statusCode,
-        });
-      }
+    const searchR = (value) => {
+      ctx.emit("update");
+      ctx.emit(
+        "searchVal",value
+      );
+      emitter.emit('seachVal', {seachVal: value})
+      console.log("dddd",value)
     };
+
+    //发布订阅--mitt
+    // emitter.emit("searchR",searchR)
+    // emitter.on("searchR",()=>{
+    //   console.log(1233455)
+    // })
     return {
-      search,
+      searchR,
       normalValue,
       emergingValue,
       statusCode,

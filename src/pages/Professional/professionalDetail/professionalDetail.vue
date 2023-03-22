@@ -105,10 +105,7 @@
 
     <view class="capsule">
       <view class="capsule_upper" @click="believeOprater(changeTide.believe)">
-        <image
-          class="capsule_upper_image"
-          src="../../../static/img/professionalDetail/Vector15.svg"
-        ></image>
+        <view class="iconfont icon-dianzan"></view>
         <view class="capsule_upper_text">真实可信</view>
       </view>
 
@@ -116,10 +113,7 @@
         class="capsule_lower"
         @click="believeOprater(changeTide.disbelieve)"
       >
-        <image
-          class="capsule_lower_image"
-          src="../../../static/img/professionalDetail/Vector16.svg"
-        ></image>
+        <view  class="iconfont icon-dianzantrans"></view>
         <view class="capsule_lower_text">不真实</view>
       </view>
     </view>
@@ -144,11 +138,7 @@
       </view>
       <view class="quantity">
         <view class="image">
-          <image
-            class="subtract"
-            src="../../../static/img/professionalDetail/Subtract.svg"
-            @click="likeCount"
-          ></image>
+          <view class="iconfont icon-lovetaoxin" @click="likeCount"></view>
         </view>
         <view class="quantity_num">{{ detailData.quantity }}</view>
       </view>
@@ -170,7 +160,7 @@ import {
 
 export default {
   props: {
-    type: Number,
+    target: String,
     id: Number,
   },
   setup(props) {
@@ -178,7 +168,10 @@ export default {
       search();
     });
 
-    const type = ref(props.type);
+    const targetRtn = ref(props.target);
+    console.log("targetRtn",targetRtn.value)
+		console.log("targetRtn",props.target)
+
     const id = ref(props.id);
 
     function search() {
@@ -187,7 +180,7 @@ export default {
       };
       if (ENV !== "self") {
         sendPostRequest(
-          type.value === 1
+          targetRtn.value === "normal"
             ? router.ordinaryGetDetail
             : router.emergingGetDetail,
           data,
@@ -202,7 +195,7 @@ export default {
           true
         );
       } else {
-        type.value === 1
+        targetRtn.value === "normal"
           ? operateData(ORDINARY_DETAIL.data)
           : operateData(EMERGING_DETAIL.data);
       }
@@ -235,21 +228,15 @@ export default {
       explain: null,
     });
 
-    //跳转路由
-    const routeOfPage = {
-      ordinary: "../searchDetail/Ordinary/ordinary",
-      emerging: "../searchDetail/Emerging/Emerging",
-    };
-
+    //跳转搜索函数
     const searchUpper = (value) => {
-		console.log("type",type.value)
       uni.redirectTo({
         url:
-		  routeOfPage.ordinary +
+		   "/pages/Professional/Professional/Professional"+
           "?inputValue=" +
           value +
-		  "&typeId=" +
-		  type.value,
+		  "&targetRtn=" +
+		  targetRtn.value,
       });
     };
 
@@ -258,7 +245,7 @@ export default {
       const like = {
         workId: id.value,
         likeType: "LIKE",
-        workType: type.value === 1 ? "NORMAL" : "NEW",
+        workType: targetRtn.value === "normal" ? "NORMAL" : "NEW",
       };
       sendPostRequest(
         router.updateLikeNum,
@@ -287,7 +274,7 @@ export default {
       const credibility = {
         workId: id.value,
         credibilityType: believe,
-        workType: type.value === 1 ? "NORMAL" : "NEW",
+        workType: targetRtn.value === "normal" ? "NORMAL" : "NEW",
       };
 
       sendPostRequest(
@@ -311,8 +298,6 @@ export default {
       believeOprater,
       likeCount,
       searchUpper,
-      type,
-      id,
       operateData,
       detailData,
     };
@@ -390,9 +375,6 @@ export default {
         margin-left: 30rpx;
         margin-top: 20rpx;
         font-size: 24rpx;
-
-        .header_card_text_p {
-        }
 
         .header_card_text_indus {
           margin-left: 20rpx;
@@ -583,9 +565,8 @@ export default {
       justify-content: space-evenly;
       align-items: center;
 
-      .capsule_upper_image {
-        width: 40rpx;
-        height: 40rpx;
+      .iconfont {
+        color: white;
       }
       .capsule_upper_text {
         color: white;
@@ -601,9 +582,8 @@ export default {
       border-radius: 36rpx;
       justify-content: space-evenly;
       align-items: center;
-      .capsule_lower_image {
-        width: 40rpx;
-        height: 40rpx;
+      .iconfont {
+        color: white;
       }
       .capsule_lower_text {
         color: white;
@@ -678,9 +658,8 @@ export default {
       .image {
         width: 75rpx;
 
-        .subtract {
-          width: 50rpx;
-          height: 46rpx;
+        .iconfont {
+          font-size: 50rpx;
         }
       }
       .quantity_num {

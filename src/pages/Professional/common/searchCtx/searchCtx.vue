@@ -1,37 +1,7 @@
 <template>
-  <view class="professionPage">
-    <view class="header">
-      <image class="header_logo" src="../../../../static/logo.svg"></image>
-    </view>
-
-    <view class="header_list">
-      <view
-        class="headerTab"
-        :class="{ headerTabLine: tabStatus === state.Normal }"
-        @click="changePage(state.Normal)"
-        >普通职业</view
-      >
-      <view
-        class="headerTab"
-        :class="{ headerTabLine: tabStatus === state.Emerging }"
-        @click="changePage(state.Emerging)"
-        >灵活职业</view
-      >
-    </view>
-
-    <view class="content_search">
-      <uni-easyinput
-        :inputBorder="false"
-        v-model="sendInformation.information"
-        placeholder="请输入公司名称/城市/岗位"
-        @iconClick="search()"
-        prefixIcon="search"
-      ></uni-easyinput>
-    </view>
-
     <view class="content_more">
-      <view class="more_list" v-if="tabStatus === state.Normal">
-        <view class="label">类型</view>
+      <view class="more_list" v-if="statusCode.statusCode === 'normal'">
+        <view class="label">类型{{statusCode.statusCode}}</view>
         <view class="label_underline"></view>
         <view class="list_scroll">
           <view class="sel_list">
@@ -48,7 +18,7 @@
       </view>
 
       <view class="more_list">
-        <view class="label">城市</view>
+        <view class="label">城市{{statusCode.statusCode}}</view>
         <view class="label_underline"></view>
         <view class="list_scroll">
           <view class="sel_list">
@@ -66,7 +36,7 @@
         </view>
       </view>
 
-      <view class="more_list" v-if="tabStatus === state.Emerging">
+      <view class="more_list" v-if="statusCode.statusCode === 'emerging'">
         <view class="label">月收入区间</view>
         <view class="label_underline"></view>
         <view class="input_salary">
@@ -90,7 +60,7 @@
         </view>
       </view>
 
-      <view class="list_scroll" v-if="tabStatus === state.Emerging">
+      <view class="list_scroll" v-if="statusCode.statusCode === 'emerging'">
         <view class="sel_list_salary">
           <view
             class="sel_item_salary"
@@ -103,7 +73,7 @@
         </view>
       </view>
 
-      <view class="more_list" v-if="tabStatus === state.Normal">
+      <view class="more_list" v-if="statusCode.statusCode === 'normal'">
         <view class="label">行业</view>
         <view class="label_underline"></view>
         <view class="list_scroll">
@@ -133,7 +103,10 @@
           >
         </view>
         <view v-for="item in detail.data" :key="item.id" class="searchItem">
-          <searchItem :detail="item" :type="1"></searchItem>
+          <searchItem
+            :detail="item"
+            :target="statusCode.statusCode"
+          ></searchItem>
         </view>
       </view>
 
@@ -144,50 +117,38 @@
         ></image>
       </view>
     </view>
-  </view>
 </template>
 
 <script>
-import { ref, reactive, toRaw, onMounted } from "vue";
+import { reactive, inject, onMounted,ref } from "vue";
 import { onPageScroll } from "@dcloudio/uni-app";
-import searchItem from "../common/searchItem.vue";
-import TYPE_LIST from "../../../config/typeData.js";
-import { SCREEN_CITY } from "../../../config/configData.js";
-import { addHotCity } from "../../../utils/cityListTools.js";
+import searchItem from "../searchItem.vue";
+import TYPE_LIST from "../../../../config/typeData";
+import { SCREEN_CITY } from "../../../../config/configData.js";
+import { addHotCity } from "../../../../utils/cityListTools.js";
 import { JOB_LIST, selSortType, SALARY_LIST } from "./constants.js";
-import sendPostRequest from "../../../utils/sendPostRequest.js";
-import router from "../../../utils/route.js";
+import sendPostRequest from "../../../../utils/sendPostRequest.js";
+import router from "../../../../utils/route.js";
+import emitter from "../../../../utils/emitter.js";
 // import { getPopCityList } from "../../../utils/cityListTools.js";
 
 //测试导入
-import { ORDINARY, EMERGING,ENV } from "../../../config/MAKRDATA.js";
+import { ORDINARY, EMERGING, ENV } from "../../../../config/MAKRDATA.js";
 
 export default {
   components: {
     searchItem,
   },
   props: {
-    normalValue: String,
-    emergingValue:String,
-    target: String,
-    typeId: String,
+    searchCtx: String
   },
   setup(props) {
+    //页面状态
+    console.log("props-searc",props.searchCtx)
+    let statusCode = inject("tabStatus");
     onMounted(() => {
       // search();
-      changePage(props.target || props.typeId);
     });
-    //页面切换
-    const state = reactive({
-      Normal: "normal",
-      Emerging: "emerging",
-    });
-    const tabStatus = ref(props.target);
-    const changePage = (value) => {
-      tabStatus.value = value;
-      search();
-    };
-
     const detail = reactive({
       data: [],
     });
@@ -196,10 +157,10 @@ export default {
       order: "",
     });
 
-    //发送信息对象
-    console.log("inputAccie", props.inputValue);
+
+    //发送信息对象 
     const sendInformation = reactive({
-      information: tabStatus.value === "normal" ? props.normalValue : props.emergingValue,
+      information:props.searchCtx,
       cityIds: [],
       typeIds: [],
       professionIds: [],
@@ -332,7 +293,7 @@ export default {
 
       if (ENV !== "self") {
         sendPostRequest(
-          tabStatus.value === state.Normal
+          statusCode.statusCode === "normal"
             ? router.ordinaryGetActicleList
             : router.emergingGetActicleList,
           data,
@@ -360,16 +321,16 @@ export default {
         );
       } else {
         uni.hideLoading();
-         operateData(tabStatus.value === "normal" ? ORDINARY.data.data : EMERGING.data.data);
-         console.log("🚀 ~ file: ordinary.vue:364 ~ search ~ tabStatus.value", tabStatus.value)
+        operateData(
+          statusCode.statusCode === "normal"
+            ? ORDINARY.data.data
+            : EMERGING.data.data
+        );
       }
     }
 
     function operateData(info) {
-      console.log("🚀 ~ file: ordinary.vue:369 ~ operateData ~ info", info)
       detail.data = [];
-      console.log("🚀 ~ file: ordinary.vue:370 ~ operateData ~ detail.data", detail.data)
-      
       Array.isArray(info) &&
         info.forEach((item) => {
           detail.data.push(item);
@@ -394,16 +355,22 @@ export default {
       }
     });
 
+    //发布订阅--mitt
+    let sss = ref();
+    emitter.on("seachVal",(data)=>{
+      sss.value = data.seachVal;
+      console.log("sss",sss.value);
+      search(data.seachVal)
+    })
+
     return {
       search,
       salaryList,
       chooseSalary,
-      tabStatus,
       flag,
       type,
       cityClassID,
       jobClassID,
-      changePage,
       selSortTypeItem,
       sendInformation,
       detail,
@@ -416,67 +383,13 @@ export default {
       tabTarget,
       changeTabTarget,
       backToTop,
-      state,
+      statusCode
     };
   },
 };
 </script>
 
 <style scoped lang="scss">
-.professionPage {
-  box-sizing: border-box;
-  background: linear-gradient(
-    90.57deg,
-    #457dea 15.49%,
-    rgba(93, 178, 248, 0.794338) 88.26%,
-    rgba(197, 216, 248, 0.7) 119.2%
-  );
-  width: 100%;
-  min-height: 100vh;
-  padding: 20rpx;
-
-  .header {
-    display: flex;
-    width: 190rpx;
-    height: 190rpx;
-    margin: 0 auto;
-    border-radius: 50%;
-    margin-bottom: 20rpx;
-
-    .header_logo {
-      width: 190rpx;
-      height: 190rpx;
-    }
-  }
-
-  .header_list {
-    font-size: 30rpx;
-    display: flex;
-    align-items: center;
-    margin: 0 auto;
-    color: #fff;
-    width: 400rpx;
-    margin-bottom: 20rpx;
-
-    .headerTab {
-      margin: 0 40rpx;
-      box-sizing: border-box;
-      padding: 20rpx 0;
-    }
-
-    .headerTabLine {
-      border-bottom: 7rpx solid #fff;
-      border-radius: 5%;
-    }
-  }
-
-  .content_search {
-    border-radius: 34rpx;
-    background-color: #fff;
-    overflow: hidden;
-    margin-bottom: 20rpx;
-  }
-
   .content_more {
     box-sizing: border-box;
     width: 100%;
@@ -639,7 +552,7 @@ export default {
         margin-bottom: 40rpx;
 
         .sel_item {
-          width: 170rpx;
+          width: 240rpx;
           height: 42rpx;
           padding: 10rpx 0;
           margin: 0 20rpx;
@@ -651,7 +564,7 @@ export default {
           padding: 10rpx 0;
           margin: 0 20rpx;
           color: #6a758b;
-          width: 217rpx;
+          width: 240rpx;
           height: 42rpx;
           background: #eef4fa;
           border-radius: 50px;
@@ -682,5 +595,4 @@ export default {
       margin-top: 16rpx;
     }
   }
-}
 </style>

@@ -19,14 +19,6 @@
 			}
 		},
 		{
-		    "path" : "pages/Professional/searchDetail/ordinary",
-		    "style" :                                                                                    
-		    {
-		        "navigationBarTitleText": "",
-		        "enablePullDownRefresh": false
-		    }  
-		},
-		{
 		    "path" : "pages/Professional/professionalDetail/professionalDetail",
 		    "style" :                                                                                    
 		    {

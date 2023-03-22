@@ -28,7 +28,6 @@
         </view>
       </view>
     </view>
-
     <view class="ad_card">
       <view class="text">广告位招商</view>
       <view class="text-wei">加vx联系:xuqingfengzs</view>

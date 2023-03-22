@@ -5,6 +5,7 @@ export default {
     finalUsedCityList()
   },
   onShow: function () {
+    wx.hideHomeButton();
     console.log('App Show')
   },
   onHide: function () {

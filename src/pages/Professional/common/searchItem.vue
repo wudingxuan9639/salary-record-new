@@ -42,7 +42,7 @@ import { reactive } from "vue";
 export default {
   props: {
     detail: Object,
-    type: Number,
+    target: String
   },
   setup(props) {
     const information = reactive({
@@ -55,11 +55,12 @@ export default {
       releaseTime: props.detail.createTime,
     });
     //查看详情
+    // console.log("searchTar",props.detail)
     const enterDetail = () => {
       uni.navigateTo({
         url:
-          "/pages/Professional/professionalDetail/professionalDetail?type=" +
-          props.type +
+          "/pages/Professional/professionalDetail/professionalDetail?target=" +
+          props.target +
           "&id=" +
           props.detail.id,
       });

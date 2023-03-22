@@ -1,0 +1,30 @@
+{
+  "id": "3949449",
+  "name": "salary-record",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "792360",
+      "name": "love-桃心",
+      "font_class": "lovetaoxin",
+      "unicode": "e6af",
+      "unicode_decimal": 59055
+    },
+    {
+      "icon_id": "34605136",
+      "name": "点赞-copy",
+      "font_class": "dianzan",
+      "unicode": "ec80",
+      "unicode_decimal": 60544
+    },
+    {
+      "icon_id": "6337455",
+      "name": "点赞",
+      "font_class": "dianzantrans",
+      "unicode": "ec7f",
+      "unicode_decimal": 60543
+    }
+  ]
+}

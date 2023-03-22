@@ -184,6 +184,11 @@ import { ENV } from "../../config/MAKRDATA.js";
 
 export default {
   setup() {
+    // 微信获取用户信息
+    const userInfo = reactive({
+      userInfo: {},
+    });
+
     //清空页面信息
     const clearPage = () => {
       company.value = "";
@@ -287,10 +292,10 @@ export default {
       eduList = EDU_LIST;
     }
 
-    function changeEducation(e) {
+    const changeEducation = (e) => {
       selEducation.name = eduList[e.detail.value].degreeName;
       selEducation.id = eduList[e.detail.value].id;
-    }
+    };
 
     //行业
     const selIndustry = reactive({
@@ -322,25 +327,33 @@ export default {
       induList =
         tabStatus.value === 1 ? INDU_LIST.ordinary : INDU_LIST.emerging;
     }
-    function changeIndustry(e) {
+    const changeIndustry = (e) => {
       selIndustry.name = induList[e.detail.value].professionName;
       selIndustry.id = induList[e.detail.value].id;
-    }
+    };
 
     //待遇
     const job_note = ref("");
 
     //
-    function showDetail() {
+    const showDetail = () => {
       uni.showModal({
         content:
           "严禁发布不良信息，违法必究\r\r\n所有数据未经允许不得盗用，侵权必究\r\n信息均为用户自愿共享发布\r\n希望大家能自觉遵守声明",
         showCancel: false,
       });
-    }
+    };
 
     //发布
-    function submit() {
+    const submit = () => {
+      wx.getUserProfile({
+        desc: "用于完善会员资料", // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
+        success: (res) => {
+          userInfo.userInfo = res.userInfo;
+          console.log("userInfo", userInfo);
+        },
+      });
+
       if (company.value === "" || salary.value === "") {
         uni.showModal({
           content: "请填完带*的选项",
@@ -425,11 +438,7 @@ export default {
           },
         });
       }
-    }
-
-    onMounted(() => {
-      //getIndexedList()
-    });
+    };
     return {
       quickFill,
       buttonList,
