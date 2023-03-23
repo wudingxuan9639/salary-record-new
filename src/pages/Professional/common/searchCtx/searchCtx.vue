@@ -143,6 +143,11 @@ export default {
     searchCtx: String
   },
   setup(props) {
+    const aa = inject("test111")
+    console.log('aa', aa.value)
+    const bb = inject("test222")
+    console.log('bb', bb.testMethod(3))
+
     //页面状态
     console.log("props-searc",props.searchCtx)
     let statusCode = inject("tabStatus");
@@ -357,7 +362,7 @@ export default {
 
     //发布订阅--mitt
     let sss = ref();
-    emitter.on("seachVal",(data)=>{
+    emitter.on("seachVal", (data)=>{
       sss.value = data.seachVal;
       console.log("sss",sss.value);
       search(data.seachVal)
