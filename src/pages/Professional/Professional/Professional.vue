@@ -17,9 +17,13 @@
         @click="changeTab('emerging')"
         >灵活职业</view
       >
+      <view>{{ testAge }}-{{ testNum }}</view>
+    
     </view>
 
-    <searchBox :tabStatus = "tabStatus" @update="operateState" @searchVal = "search"> </searchBox>
+    <searchBox :tabStatus = "tabStatus" @update="operateState" @searchVal = "search"
+    @update-age="updateAge"
+    > </searchBox>
 
     <view v-if="!pageSearched">
       <view class="hot_box" v-if="tabStatus.statusCode === 'emerging'">
@@ -76,7 +80,7 @@
 </template>
 
 <script>
-import { ref, reactive, toRaw, onMounted, provide,inject,toRef } from "vue";
+import { ref, reactive, toRaw, onMounted, provide,inject,toRef,computed } from "vue";
 import { HOT_ORDINARY, HOT_EMERGING } from "../../../config/configData.js";
 import sendPostRequest from "../../../utils/sendPostRequest.js";
 import router from "../../../utils/route.js";
@@ -100,6 +104,25 @@ export default {
     targetRtn:String
   },
   setup(props) {
+
+    let testAge = ref(100)
+    let testNum = ref(5)
+    let testObj = reactive({
+      testMethod:(a)=>{
+        testNum.value += a;
+        return testNum.value
+      }
+    })
+    function updateAge(newAge) {
+      console.log('newAge', newAge)
+      testAge.value = newAge
+    }
+    provide('test111', testAge)
+    provide('test222', testObj)
+    provide('test333', testNum)
+
+    
+
     //页面状态
     let pageSearched = ref(false);
     const operateState = () => {
@@ -235,7 +258,6 @@ export default {
     let searchCtx = ref("出去")
     const search = (value) => {
       provide("searchCon",value)
-      console.log("ffff",value)
       // let searchCtx = value
       // return searchCtx;
       searchCtx.value = value;
@@ -244,6 +266,7 @@ export default {
     
 
     return {
+      testAge,updateAge,testNum,
       searchCtx,
       operateState,
       pageSearched,

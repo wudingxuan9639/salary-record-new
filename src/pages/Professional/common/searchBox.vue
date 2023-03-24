@@ -27,14 +27,14 @@
           class="content_search_img"
           src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADfSURBVHgB1ZPhDYMgEIUvnYARHMER2KTdoN2gbqAb4AjtJHYDugEj0IPcxQuhgI1p4ksu/rjH53E+Af4h773GGrGsX7VgGaxuC0gRqKbgUS2whQ44rCFMKvo91pxMrEpAnsyWrhV6fl3FWDKxvsISvyO/zhkMNQ00ilYSNOWavLu+kcdJiCvKNaNgo3LnTrCzGPimN+rWg2I9rxzwSU8N7brmgPw2LQLdQX26eszC5/8h2A8oGOWvFzMpY0S3uItAs8416OTrCp6hCSquNScTWwJp4WOog72EsAvWDQ6jD0InxqabjzR3AAAAAElFTkSuQmCC"
         ></image>
-        <view class="content_search_button_text">搜索</view>
+        <view class="content_search_button_text">搜索 {{ cc }}</view>
       </view>
     </view>
   </view>
 </template>
 
 <script>
-import { ref,provide, toRef} from "vue";
+import { ref,provide, inject, toRef} from "vue";
 import emitter from "../../../utils/emitter.js";
 export default {
   props: ["tabStatus"],
@@ -50,9 +50,14 @@ export default {
       ctx.emit(
         "searchVal",value
       );
+
+      ctx.emit('update-age', 2);
+
       emitter.emit('seachVal', {seachVal: value})
-      console.log("dddd",value)
     };
+
+    let cc = inject('test333')
+    console.log('cc', cc.value)
 
     //发布订阅--mitt
     // emitter.emit("searchR",searchR)
@@ -64,6 +69,7 @@ export default {
       normalValue,
       emergingValue,
       statusCode,
+      cc,
     };
   },
 };
